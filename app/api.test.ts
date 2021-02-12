@@ -1,17 +1,27 @@
-const axios = require('axios')
+import {ApiTestBuilder} from "./apiTestBuilder";
 
-it("should make a get request", async(done) => {
-    axios.get('http://google.com').then((result: any) => {
-        expect(result.data.length).toBeGreaterThan(0);
-        done();
-    });
-});
-it("should make a post request", async(done) => {
-    axios.post('http://google.com', {'data': 'to post'}).then((result: any) => {
-        expect(result.data.length).toBeGreaterThan(0);
-        done();
-    }).catch((error: any) => {
-        expect(error).not.toBeNull();
-        done();
-    });
-});
+const tests = [
+    {
+        type: 'post',
+        label: 'this should post',
+        url: 'https://google.com',
+        postObject: {data: 'whatever the object looks like'}
+        },
+    {
+        type: 'get',
+        label: 'this should get',
+        url: 'https://google.com'
+    }];
+describe('this is the base test runner', () => {
+    const apiTestBuilder = new ApiTestBuilder();
+    tests.forEach(test => {
+        switch(test.type) {
+            case 'get':
+                apiTestBuilder.get(test.label, test.url);
+                break;
+            case 'post':
+                apiTestBuilder.post(test.label, test.url, test.postObject);
+                break;
+        }
+    })
+})
